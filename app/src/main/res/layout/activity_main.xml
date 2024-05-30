@@ -103,10 +103,11 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/mwTime_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="5일"
+                    android:text="15:00"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -123,6 +124,8 @@
                     android:background="@drawable/sun" />
 
                 <TextView
+
+                    android:id="@+id/mwTemp_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -140,10 +143,11 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/mwTime_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="5일"
+                    android:text="18:00"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -160,6 +164,7 @@
                     android:background="@drawable/rain_sunder" />
 
                 <TextView
+                    android:id="@+id/mwTemp_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -178,10 +183,11 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/mwTime_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="5일"
+                    android:text="21:00"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -198,6 +204,7 @@
                     android:background="@drawable/sun" />
 
                 <TextView
+                    android:id="@+id/mwTemp_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -217,10 +224,11 @@
 
 
                 <TextView
+                    android:id="@+id/mwTime_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="5일"
+                    android:text="24:00"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -237,6 +245,7 @@
                     android:background="@drawable/sunder" />
 
                 <TextView
+                    android:id="@+id/mwTemp_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -255,10 +264,11 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/mwTime_6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="5일"
+                    android:text="03:00"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -275,6 +285,7 @@
                     android:background="@drawable/sun" />
 
                 <TextView
+                    android:id="@+id/mwTemp_6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -293,10 +304,11 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/mwTime_7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="5일"
+                    android:text="06:00"
                     android:textColor="@color/white"
                     android:textSize="20dp" />
 
@@ -313,6 +325,7 @@
                     android:background="@drawable/sun" />
 
                 <TextView
+                    android:id="@+id/mwTemp_7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
