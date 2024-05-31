@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -16,6 +17,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.io.BufferedReader;
@@ -31,22 +33,20 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "ApiExplorer";
     private Handler handler = new Handler();
-    TextView mwTime_7,mwTime_6,mwTime_5,mwTime_4,mwTime_3,mwTime_2;
     long mNow;
     String date;
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat tFormat = new SimpleDateFormat("HH:mm");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREAN);
-
+    String period = "AM";
 
 
     private Runnable updateTimeRunnable = new Runnable() {
         @Override
         public void run() {
-            String currentTime = getCurrentTime();
-//            timeTextView.setText(currentTime);
-//            Log.d("CurrentTime", "현재 시간: " + currentTime);
-            handler.postDelayed(this, 1000); // 1초마다 현재 시간 갱신
+
+            getTime();
+            handler.postDelayed(this, 10000); // 10초마다 현재 시간 갱신
         }
     };
     @Override
@@ -94,7 +94,19 @@ public class MainActivity extends AppCompatActivity {
 
         TextView Tv_time = findViewById(R.id.time);
         TextView Tv_date = findViewById(R.id.date);
-        String period = "AM";
+
+        LinearLayout mainLayout = findViewById(R.id.mainLayout);
+
+        if(21 <= int_hour || int_hour <= 05){ //21시~ 05시
+            mainLayout.setBackgroundResource(R.drawable.night_bg);
+        }else if(int_hour >= 06 && int_hour <= 9){ //06시 ~ 9시
+            mainLayout.setBackgroundResource(R.drawable.nightcloud_bg);
+        }else if(int_hour >= 10 && int_hour < 17){ //10시 ~ 16시
+            mainLayout.setBackgroundResource(R.drawable.morning_bg);
+        }else{ //17시~21시
+            mainLayout.setBackgroundResource(R.drawable.afternoon_bg);
+        }
+
 
         if(int_hour >= 12){ //12시를 넘으면 PM , 12:50분가능
             period = "PM";
@@ -112,15 +124,16 @@ public class MainActivity extends AppCompatActivity {
         return date;
     }
 
-    private String getCurrentTime() {
-        Calendar calendar = Calendar.getInstance();
-        TimeZone timeZone = TimeZone.getDefault();
-        calendar.setTimeZone(timeZone);
-
-        dateFormat.setTimeZone(timeZone);
-
-        return dateFormat.format(calendar.getTime());
-    }
+//    사용안합니다!
+//    private String getCurrentTime() {
+//        Calendar calendar = Calendar.getInstance();
+//        TimeZone timeZone = TimeZone.getDefault();
+//        calendar.setTimeZone(timeZone);
+//
+//        dateFormat.setTimeZone(timeZone);
+//
+//        return dateFormat.format(calendar.getTime());
+//    }
 
     @Override
     protected void onDestroy() {
@@ -145,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (result != null) {
+            if (result != null && !result.trim().isEmpty()) {
                 try {
                     parseDataAndUpdateUI(new StringBuilder(result));
                 } catch (JSONException | ParseException e) {
@@ -154,8 +167,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        protected String fetchData_Api() throws IOException, JSONException {
+        protected String fetchData_Api() {
             StringBuilder result = new StringBuilder();
+            HttpURLConnection conn = null;
+            BufferedReader rd = null;
             try {
                 StringBuilder urlBuilder = new StringBuilder("https://api.openweathermap.org/data/2.5/forecast");
                 urlBuilder.append("?" + URLEncoder.encode("lat", "UTF-8") + "=35.5936");
@@ -165,37 +180,47 @@ public class MainActivity extends AppCompatActivity {
                 urlBuilder.append("&" + URLEncoder.encode("units", "UTF-8") + "=" + URLEncoder.encode("metric", "UTF-8"));
 
                 URL url = new URL(urlBuilder.toString());
-                // 요청 헤더 생성, 유형 json으로 받아옴
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("GET");
                 conn.setRequestProperty("Content-type", "application/json");
 
-                Log.d(TAG, "urlBuilder: " + urlBuilder);
+                Log.d(TAG, "urlBuilder: " + urlBuilder.toString());
                 Log.d(TAG, "Responsecode: " + conn.getResponseCode());
 
-                BufferedReader rd;
                 if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
                     rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String line;
-                    while ((line = rd.readLine()) != null) {
-                        result.append(line); // API 응답을 result StringBuilder에 추가
-                    }
                 } else {
-                    // 실패 시 errorstream
                     rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-                    String line;
-                    while ((line = rd.readLine()) != null) {
-                        // 에러 응답을 읽어 처리
-                        Log.e(TAG, "Error Response: " + line);
+                }
+
+                String line;
+                while ((line = rd.readLine()) != null) {
+                    result.append(line);
+                }
+            } catch (MalformedURLException e) {
+                Log.e(TAG, "MalformedURLException in fetchData_Api: ", e);
+            } catch (IOException e) {
+                Log.e(TAG, "IOException in fetchData_Api: ", e);
+            } catch (Exception e) {
+                Log.e(TAG, "General Exception in fetchData_Api: ", e);
+            } finally {
+                if (rd != null) {
+                    try {
+                        rd.close();
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error closing BufferedReader: ", e);
                     }
                 }
-                rd.close();
-                conn.disconnect();
-            } catch (Exception e) {
-                Log.e(TAG, "Error: ", e);
+                if (conn != null) {
+                    conn.disconnect();
+                }
             }
+
+            Log.d(TAG, "result: " + result.toString());
             return result.toString();
         }
+
+
 
         private void parseDataAndUpdateUI(StringBuilder result) throws JSONException, ParseException {
             JSONObject response = new JSONObject(result.toString());
@@ -205,8 +230,11 @@ public class MainActivity extends AppCompatActivity {
 
                 JSONObject item = list.getJSONObject(i); //날씨 item 오브젝트로 받아옴
                 Date dtTxt_date = dateFormat.parse(item.getString("dt_txt"));
-                String dTxt = mFormat.format(dtTxt_date); //날짜만 yy:mm:dd
-                String tTxt = tFormat.format(dtTxt_date); //시간만 hh:mm:ss
+                String dTxt = mFormat.format(dtTxt_date); //날짜만 yy:mm:dd 형식
+                String tTxt = tFormat.format(dtTxt_date); //시간 hh:mm 형식
+                int colonIndex = tTxt.indexOf(':');
+                int int_hour = Integer.parseInt(tTxt.substring(0, colonIndex)); // 시간 (HH)
+
                 JSONObject main = item.getJSONObject("main");
 
                 Log.d(TAG , "dtTxt: " + dTxt + "date :" + date);
@@ -222,7 +250,6 @@ public class MainActivity extends AppCompatActivity {
                     // 점이 문자열에 없는 경우, 전체 문자열을 사용
                     temp = double_temp + "℃";
                 }
-
 
                 String humidity = main.getString("humidity"); //습도
 
@@ -245,6 +272,8 @@ public class MainActivity extends AppCompatActivity {
                     ImageView mainIcon = findViewById(R.id.mainIcon);
                     if(i == 2){
                         Main_temp.setText(temp);
+
+
                     }
                     // 동적으로 ID 생성
                     String TimeV_Id = "mwTime_" + i;
@@ -270,39 +299,95 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (description) {
                             case "맑음":
-                                mwIcon.setBackgroundResource(R.drawable.sun_ic);
-                                if(i == 2){
-                                    mainIcon.setBackgroundResource(R.drawable.sun_ic);
+                                if(period == "AM") {
+                                    mwIcon.setBackgroundResource(R.drawable.sun_ic);
+
+                                    if(i == 2){
+                                        mainIcon.setBackgroundResource(R.drawable.msun_ic);
+                                    }
+                                    if(int_hour == 00 || int_hour == 03) {
+                                        mwIcon.setBackgroundResource(R.drawable.union_ic);
+                                        if (i == 2) {
+                                            mainIcon.setBackgroundResource(R.drawable.union_ic);
+                                        }
+                                    }
+                                }else{
+                                    mwIcon.setBackgroundResource(R.drawable.union_ic);
+                                    if(i == 2){
+                                        mainIcon.setBackgroundResource(R.drawable.union_ic);
+                                    }
                                 }
+
                                 break;
                             case "구름조금":
-                                mwIcon.setBackgroundResource(R.drawable.suncloud_ic);
-                                if(i == 2){
-                                    mainIcon.setBackgroundResource(R.drawable.suncloud_ic);
+                                if(period == "AM") {
+                                    mwIcon.setBackgroundResource(R.drawable.suncloud_ic);
+
+                                    if(i == 2){
+                                        mainIcon.setBackgroundResource(R.drawable.msuncloud_ic);
+                                    }
+                                    if(int_hour == 00 || int_hour == 03) {
+                                        mwIcon.setBackgroundResource(R.drawable.nightcloud_ic);
+                                        if (i == 2) {
+                                            mainIcon.setBackgroundResource(R.drawable.mnightcloud_ic);
+                                        }
+                                    }
+                                }else{
+                                    mwIcon.setBackgroundResource(R.drawable.nightcloud_ic);
+                                    if(i == 2){
+                                        mainIcon.setBackgroundResource(R.drawable.mnightcloud_ic);
+                                    }
                                 }
                                 break;
                             case "튼구름":
-                                mwIcon.setBackgroundResource(R.drawable.suncloud_ic);
-                                if(i == 2){
-                                    mainIcon.setBackgroundResource(R.drawable.suncloud_ic);
+                                if(period == "AM") {
+                                    mwIcon.setBackgroundResource(R.drawable.suncloud_ic);
+                                    if(i == 2){
+                                        mainIcon.setBackgroundResource(R.drawable.msuncloud_ic);
+                                    }
+                                    if(int_hour == 00 || int_hour == 03) {
+                                        mwIcon.setBackgroundResource(R.drawable.nightcloud_ic);
+                                        if (i == 2) {
+                                            mainIcon.setBackgroundResource(R.drawable.mnightcloud_ic);
+                                        }
+                                    }
+                                }else{
+                                    mwIcon.setBackgroundResource(R.drawable.nightcloud_ic);
+                                    if(i == 2){
+                                        mainIcon.setBackgroundResource(R.drawable.mnightcloud_ic);
+                                    }
                                 }
                                 break;
                             case "온흐림":
                                 mwIcon.setBackgroundResource(R.drawable.blur_ic);
                                 if(i == 2){
-                                    mainIcon.setBackgroundResource(R.drawable.blur_ic);
+                                    mainIcon.setBackgroundResource(R.drawable.mblur_ic);
                                 }
                                 break;
                             case "약간의 구름이 낀 하늘" :
-                                mwIcon.setBackgroundResource(R.drawable.sun_ic);
-                                if(i == 2){
-                                    mainIcon.setBackgroundResource(R.drawable.sun_ic);
+                                if(period == "AM") {
+                                    mwIcon.setBackgroundResource(R.drawable.sun_ic);
+
+                                    if(i == 2){
+                                        mainIcon.setBackgroundResource(R.drawable.msun_ic);
+                                    }
+                                    if(int_hour == 00 || int_hour == 03) {
+                                        mwIcon.setBackgroundResource(R.drawable.union_ic);
+                                        if (i == 2) {
+                                            mainIcon.setBackgroundResource(R.drawable.union_ic);
+                                        }
+                                    }
+                                }else{
+                                    mwIcon.setBackgroundResource(R.drawable.union_ic);
+                                    if(i == 2){
+                                        mainIcon.setBackgroundResource(R.drawable.union_ic);
+                                    }
                                 }
                                 break;
                             case "실 비" :
                                 mwIcon.setBackgroundResource(R.drawable.rain_ic);
                                 if(i == 2){
-                                    mainIcon.setBackgroundResource(R.drawable.rain_ic);
+                                    mainIcon.setBackgroundResource(R.drawable.mrain_ic);
                                 }
                                 break;
                         }
