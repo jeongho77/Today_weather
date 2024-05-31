@@ -5,11 +5,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat tFormat = new SimpleDateFormat("HH:mm");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREAN);
+
+
 
     private Runnable updateTimeRunnable = new Runnable() {
         @Override
@@ -68,6 +72,42 @@ public class MainActivity extends AppCompatActivity {
         Date mDate = new Date(mNow);
 
         date = mFormat.format(mDate);
+        SimpleDateFormat tFormat = new SimpleDateFormat("HH:mm"); //시간
+        SimpleDateFormat dFormat = new SimpleDateFormat("MM-dd"); //날짜
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault()); // 요일
+
+        String tDate = tFormat.format(mDate); //시간
+        String dDate = dFormat.format(mDate); //날짜
+        String subDay = dayFormat.format(mDate); //요일
+
+        String day = subDay.substring(0,1);
+
+        Log.d(TAG, "day" + day);
+
+        int colonIndex = tDate.indexOf(':');
+        int int_hour = Integer.parseInt(tDate.substring(0, colonIndex)); // 시간 (HH)
+        int int_minute = Integer.parseInt(tDate.substring(colonIndex + 1)); // 분 (MM)
+
+        colonIndex = dDate.indexOf('-');
+        int int_day = Integer.parseInt(dDate.substring(0, colonIndex));
+        int int_month = Integer.parseInt(dDate.substring(colonIndex + 1));
+
+        TextView Tv_time = findViewById(R.id.time);
+        TextView Tv_date = findViewById(R.id.date);
+        String period = "AM";
+
+        if(int_hour >= 12){ //12시를 넘으면 PM , 12:50분가능
+            period = "PM";
+            if(int_hour > 12) { // 13시이상이면 12빼서 1시로 만들어주기
+                int_hour -= 12;
+                }
+        }
+        String formattedTime = String.format(Locale.getDefault(), "|  %s %02d : %02d", period, int_hour, int_minute);
+        String formattedDay = String.format(Locale.getDefault(), "%02d/%02d (%s)",int_day, int_month, day);
+        Tv_time.setText(formattedTime);
+        Tv_date.setText(formattedDay);
+
+        Log.d(TAG, "tFormat:  " + formattedTime);
 
         return date;
     }
@@ -172,9 +212,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG , "dtTxt: " + dTxt + "date :" + date);
                 Log.d(TAG, "item: " + item.toString());
 
-                String double_temp = main.getString("temp"); //기온
+                String double_temp = main.getString("temp"); // 기온
                 int dotIndex = double_temp.indexOf('.');
-                String temp = double_temp.substring(0, dotIndex) + "℃";
+                String temp;
+                if (dotIndex != -1) {
+                    // 점이 문자열에 있는 경우
+                    temp = double_temp.substring(0, dotIndex) + "℃";
+                } else {
+                    // 점이 문자열에 없는 경우, 전체 문자열을 사용
+                    temp = double_temp + "℃";
+                }
 
 
                 String humidity = main.getString("humidity"); //습도
@@ -193,6 +240,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if(i <= 7){ //메인페이지 고정으로 출력해주기 6개까지 해줘야함
+
+                    TextView Main_temp = findViewById(R.id.Main_temp);
+                    ImageView mainIcon = findViewById(R.id.mainIcon);
+                    if(i == 2){
+                        Main_temp.setText(temp);
+                    }
                     // 동적으로 ID 생성
                     String TimeV_Id = "mwTime_" + i;
                     int Time_resId = getResources().getIdentifier(TimeV_Id , "id", getPackageName());
@@ -200,16 +253,60 @@ public class MainActivity extends AppCompatActivity {
                     String TempV_Id = "mwTemp_" + i;
                     int Temp_resId = getResources().getIdentifier(TempV_Id, "id", getPackageName());
 
+                    String IconV_Id = "mwIcon_" + i;
+                    int Icon_resId = getResources().getIdentifier(IconV_Id, "id", getPackageName());
+
                     // 해당 ID의 TextView 찾기
                     TextView mwTime = findViewById(Time_resId);
                     TextView mwTemp = findViewById(Temp_resId);
+                    ImageView mwIcon = findViewById(Icon_resId);
 
                     Log.d(TAG, "mwTime" + mwTime + "tTxt" + tTxt);
 
-                    if (mwTime != null) {
+                    if (mwTime != null && mwTemp != null && mwIcon != null) {
                         // TextView 설정 (예: 텍스트 설정)
                         mwTime.setText(tTxt);
                         mwTemp.setText(temp);
+
+                        switch (description) {
+                            case "맑음":
+                                mwIcon.setBackgroundResource(R.drawable.sun_ic);
+                                if(i == 2){
+                                    mainIcon.setBackgroundResource(R.drawable.sun_ic);
+                                }
+                                break;
+                            case "구름조금":
+                                mwIcon.setBackgroundResource(R.drawable.suncloud_ic);
+                                if(i == 2){
+                                    mainIcon.setBackgroundResource(R.drawable.suncloud_ic);
+                                }
+                                break;
+                            case "튼구름":
+                                mwIcon.setBackgroundResource(R.drawable.suncloud_ic);
+                                if(i == 2){
+                                    mainIcon.setBackgroundResource(R.drawable.suncloud_ic);
+                                }
+                                break;
+                            case "온흐림":
+                                mwIcon.setBackgroundResource(R.drawable.blur_ic);
+                                if(i == 2){
+                                    mainIcon.setBackgroundResource(R.drawable.blur_ic);
+                                }
+                                break;
+                            case "약간의 구름이 낀 하늘" :
+                                mwIcon.setBackgroundResource(R.drawable.sun_ic);
+                                if(i == 2){
+                                    mainIcon.setBackgroundResource(R.drawable.sun_ic);
+                                }
+                                break;
+                            case "실 비" :
+                                mwIcon.setBackgroundResource(R.drawable.rain_ic);
+                                if(i == 2){
+                                    mainIcon.setBackgroundResource(R.drawable.rain_ic);
+                                }
+                                break;
+                        }
+
                         // 디버그 로그 출력
                         Log.d("TextViewSetup", "설정된 TextView ID: " + Time_resId);
                     } else {
@@ -220,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
 ////              Log.d(TAG, "weather dxTxt = " + dtTxt);
 //                Log.d(TAG, "weather temp = " + temp);
 //                Log.d(TAG, "weather humidity = " + humidity);
-//                Log.d(TAG, "weather description = " + description);
+                Log.d(TAG, "weather description = " + description);
 //                Log.d(TAG, "weather pop = " + pop);
             }
         }
