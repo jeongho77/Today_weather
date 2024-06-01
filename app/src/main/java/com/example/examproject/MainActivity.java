@@ -1,10 +1,14 @@
 package com.example.examproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     SimpleDateFormat tFormat = new SimpleDateFormat("HH:mm");
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREAN);
     String period = "AM";
+    JSONArray list = null;
+    Button next_btn;
 
 
     private Runnable updateTimeRunnable = new Runnable() {
@@ -63,15 +69,28 @@ public class MainActivity extends AppCompatActivity {
         // API 호출을 비동기 작업으로 실행
         Log.d(TAG, "Time: " + getTime());
         new ApiExplorerTask().execute();
+
+        next_btn = findViewById(R.id.next_btn);
+        next_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), NextWeatherActivity.class);
+                intent.putExtra("jsonArray", list.toString());
+                startActivity(intent);
+            }
+        });
     }
 
-    private String getTime(){
+
+
+    public String getTime(){
         //날짜 가져오는 함수
 
         mNow = System.currentTimeMillis();
         Date mDate = new Date(mNow);
 
         date = mFormat.format(mDate);
+
         SimpleDateFormat tFormat = new SimpleDateFormat("HH:mm"); //시간
         SimpleDateFormat dFormat = new SimpleDateFormat("MM-dd"); //날짜
         SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE", Locale.getDefault()); // 요일
@@ -81,8 +100,6 @@ public class MainActivity extends AppCompatActivity {
         String subDay = dayFormat.format(mDate); //요일
 
         String day = subDay.substring(0,1);
-
-        Log.d(TAG, "day" + day);
 
         int colonIndex = tDate.indexOf(':');
         int int_hour = Integer.parseInt(tDate.substring(0, colonIndex)); // 시간 (HH)
@@ -106,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         }else{ //17시~21시
             mainLayout.setBackgroundResource(R.drawable.afternoon_bg);
         }
-
 
         if(int_hour >= 12){ //12시를 넘으면 PM , 12:50분가능
             period = "PM";
@@ -134,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
 //
 //        return dateFormat.format(calendar.getTime());
 //    }
+
+
 
     @Override
     protected void onDestroy() {
@@ -224,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
 
         private void parseDataAndUpdateUI(StringBuilder result) throws JSONException, ParseException {
             JSONObject response = new JSONObject(result.toString());
-            JSONArray list = response.getJSONArray("list");
+            list = response.getJSONArray("list");
 
             for (int i = 2; i < list.length(); i++) { //i = 0은 6시간전이라 필요없음 3시간전까지만 유효 3시일때 전날 21시 데이터 받는거 방지
 
