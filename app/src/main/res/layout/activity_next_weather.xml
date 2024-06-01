@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="452dp"
+        android:layout_height="425dp"
         android:orientation="vertical">
 
         <TextView
@@ -71,7 +71,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:gravity="end"
                 android:layout_gravity="end"
                 android:orientation="horizontal"
@@ -95,12 +95,14 @@
                     android:text="18°"/>
 
                 <ImageView
+                    android:id="@+id/weather_1"
                     android:layout_width="67dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
                     android:background="@drawable/blur_ic"
                     android:gravity="end"
-                    android:textSize="30sp" />
+                    android:textSize="30sp"
+                    />
             </LinearLayout>
         </LinearLayout>
 
@@ -125,7 +127,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:gravity="end"
                 android:layout_gravity="end"
                 android:orientation="horizontal"
@@ -149,6 +151,7 @@
                     android:text="18°"/>
 
                 <ImageView
+                    android:id="@+id/weather_2"
                     android:layout_width="67dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
@@ -179,7 +182,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:gravity="end"
                 android:layout_gravity="end"
                 android:orientation="horizontal"
@@ -203,6 +206,7 @@
                     android:text="18°"/>
 
                 <ImageView
+                    android:id="@+id/weather_3"
                     android:layout_width="67dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
@@ -233,7 +237,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:gravity="end"
                 android:layout_gravity="end"
                 android:orientation="horizontal"
@@ -257,6 +261,7 @@
                     android:text="18°"/>
 
                 <ImageView
+                    android:id="@+id/weather_4"
                     android:layout_width="67dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
@@ -287,7 +292,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:gravity="end"
                 android:layout_gravity="end"
                 android:orientation="horizontal"
@@ -310,6 +315,7 @@
                     android:text="18°"/>
 
                 <ImageView
+                    android:id="@+id/weather_5"
                     android:layout_width="67dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
@@ -318,14 +324,6 @@
                     android:textSize="30sp" />
             </LinearLayout>
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="5px"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/cardview_dark_background" />
-
     </LinearLayout>
 
 

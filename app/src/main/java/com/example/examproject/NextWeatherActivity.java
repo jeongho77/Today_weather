@@ -4,14 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -36,6 +40,52 @@ public class NextWeatherActivity extends AppCompatActivity {
             }
         }
     }
+    int j = 0;
+    String[] array = new String[8];
+    public void setWeatherIcon(int i, String des){
+        j++;
+
+        String weather_Id = "weather_" + i;
+        int weather_resId = getResources().getIdentifier(weather_Id ,"id", getPackageName());
+        ImageView weather_v = findViewById(weather_resId);
+
+        array[j] = des;
+
+        if(j == 7) {
+
+            int cloudyCount = 0;
+            int overcastCount = 0;
+            int rainCount = 0;
+
+            for (String weather : array) {
+                if (weather != null) { // null이 아닌지 확인합니다.
+                    if (weather.contains("흐림") || weather.contains("튼구름")) {
+                        cloudyCount++;
+                    }
+
+                    if (weather.contains("맑음") || weather.contains("조금")) {
+                        overcastCount++;
+                    }
+                    if (weather.contains("비")) {
+                        rainCount++;
+
+                    }
+                }
+            }
+
+            if (rainCount > 0) {
+                weather_v.setBackgroundResource(R.drawable.rain_ic);
+            } else if (overcastCount > cloudyCount) {
+                weather_v.setBackgroundResource(R.drawable.sun_ic);
+            } else {
+                weather_v.setBackgroundResource(R.drawable.blur_ic);
+            }
+
+            Arrays.fill(array, null);
+            j = 0;
+        }
+    }
+
 
     public void setDate(int i){
         Calendar calendar = Calendar.getInstance();
@@ -54,7 +104,6 @@ public class NextWeatherActivity extends AppCompatActivity {
         TextView day = findViewById(day_resId);
 
         day.setText(days[dayOfWeek-1]);
-
     }
 
     public void setTemperatureValues(double maxTemp, double minTemp, int i) {
@@ -115,16 +164,20 @@ public class NextWeatherActivity extends AppCompatActivity {
             int xml_count = 1;
 
             for (int i = 2; i < list.length(); i++) {
+
                 JSONObject item = list.getJSONObject(i);
                 String dt_txt = item.getString("dt_txt");
                 Date date = mFormat.parse(dt_txt);
                 String formattedDate = mFormat.format(date);
                 JSONObject main = item.getJSONObject("main");
+                JSONArray weatherArray = item.getJSONArray("weather");
+                JSONObject weather = weatherArray.getJSONObject(0);
+                String description = weather.getString("description");
 
                 if (formattedDate.equals(NextWeatherActivity.getTime(getTime_count))) {
                     day_Count += 1; // 7번이 되면 초기화 날짜가 바뀜
                     double temp = main.getDouble("temp");
-
+                    ((NextWeatherActivity) context).setWeatherIcon(xml_count, description);
                     if (temp > maxTemp) {
                         maxTemp = temp;
                     }
@@ -133,6 +186,7 @@ public class NextWeatherActivity extends AppCompatActivity {
                     }
 
                     if (day_Count == 7) {
+
                         getTime_count++; // 다음날 데이터받게함
                         ((NextWeatherActivity) context).setTemperatureValues(maxTemp, minTemp, xml_count);
 
