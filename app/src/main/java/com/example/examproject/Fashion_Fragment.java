@@ -224,16 +224,6 @@ public class Fashion_Fragment extends Fragment {
                 break;
         }
 
-
-
-
-
-
-
-
-
-
-
     }
 
     @Nullable

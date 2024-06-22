@@ -269,6 +269,7 @@
                 android:gravity="end"
                 android:orientation="horizontal">
 
+
                 <TextView
                     android:id="@+id/maxtemp_4"
                     android:layout_width="wrap_content"
@@ -322,7 +323,8 @@
                 android:gravity="center"
                 android:paddingTop="5dp"
                 android:textColor="@color/black"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:text="6/28 금요일"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -331,12 +333,14 @@
                 android:layout_gravity="end"
                 android:orientation="horizontal">
 
+
                 <TextView
                     android:id="@+id/maxtemp_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginRight="10dp"
+                    android:text="24°"
                     android:gravity="end"
                     android:paddingTop="5dp"
                     android:textColor="@color/red"
@@ -349,6 +353,7 @@
                     android:layout_gravity="end"
                     android:layout_marginRight="10dp"
                     android:gravity="end"
+                    android:text="19°"
                     android:paddingTop="5dp"
                     android:textColor="@color/blue"
                     android:textSize="30sp" />
@@ -359,7 +364,8 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
                     android:gravity="end"
-                    android:textSize="30sp" />
+                    android:textSize="30sp"
+                    android:background="@drawable/pink_rain"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

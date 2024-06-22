@@ -28,6 +28,4 @@ public class SplashActivity extends AppCompatActivity {
             }
         }, 2000); // 시간 2초 이후 실행
     }
-
-
 }

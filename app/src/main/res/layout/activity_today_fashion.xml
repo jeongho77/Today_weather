@@ -15,6 +15,7 @@
         android:gravity="center"
         android:text="오늘의 날씨에 맞는 옷추천입니다."
         android:textSize="27sp"
+        android:textColor="@color/black"
         android:layout_marginTop="30dp"/>
 
     <LinearLayout
@@ -34,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="겉옷"
+                android:textColor="@color/black"
                 android:textSize="30dp"/>
             <ImageView
                 android:id="@+id/outerimg"
@@ -46,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="패딩"
+                android:textColor="@color/black"
                 android:textSize="15sp"/>
         </LinearLayout>
 
@@ -61,6 +64,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="상의"
+                android:textColor="@color/black"
                 android:textSize="30dp"/>
             <ImageView
                 android:id="@+id/topimg"
@@ -72,6 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:textColor="@color/black"
                 android:text="패딩"
                 android:textSize="15sp"/>
         </LinearLayout>
@@ -98,6 +103,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="패딩"
+                android:textColor="@color/black"
                 android:textSize="15sp"/>
         </LinearLayout>
     </LinearLayout>

@@ -92,17 +92,14 @@ public class NextWeatherActivity extends AppCompatActivity {
                     if (weather.contains("흐림") || weather.contains("튼구름")) {
                         cloudyCount++;
                     }
-
                     if (weather.contains("맑음") || weather.contains("조금")) {
                         overcastCount++;
                     }
                     if (weather.contains("비")) {
                         rainCount++;
-
                     }
                 }
             }
-
             if (rainCount > 0) {
                 weather_v.setBackgroundResource(R.drawable.pink_rain);
             } else if (overcastCount > cloudyCount) {

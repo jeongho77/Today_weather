@@ -90,13 +90,11 @@ public class MainActivity extends AppCompatActivity {
                     case 0:
                         findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
 
-
                         Fashion_Fragment myFragment = Fashion_Fragment.newInstance(frag_temp);
                         FragmentManager fragmentManager = getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.fragment_container, myFragment);
                         fragmentTransaction.commit();
-
                         trigger = 1;
                         break;
                     case 1:
@@ -109,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
         next_btn.setOnClickListener(new View.OnClickListener() {
             ImageView imageView = findViewById(R.id.mainIcon);
             TextView textView = findViewById(R.id.Main_temp);
