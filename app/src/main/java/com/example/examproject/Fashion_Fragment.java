@@ -34,29 +34,29 @@ public class Fashion_Fragment extends Fragment {
     public void suggest(int temp){
 
         // 23도 이상
-        String[] Outerwear23 = {"바람막이", "져지" };
-        String[] Tops23 = {"반팔 티셔츠", "얇은 셔츠"};
+        String[] Outerwear23 = {"바람막이", "져지"};
+        String[] Tops23 = {"반팔 티셔츠", "셔츠"};
         String[] Bottoms23 = {"반바지", "면바지", "치마"};
 
         // 17~22도
-        String[] Outerwear17to22 = {"가디건" , "재킷" , "바람막이"};
+        String[] Outerwear17to22 = {"가디건" , "져지" , "바람막이"};
         String[] Tops17to22 = {"긴팔 티셔츠", "셔츠", "반팔 티셔츠"};
         String[] Bottoms17to22 = {"반바지", "면바지", "슬랙스"};
 
         // 12~16도
-        String[] Outerwear12to16 = {"재킷", "가디건" , "바람막이"};
+        String[] Outerwear12to16 = {"자켓", "가디건" , "바람막이"};
         String[] Tops12to16 = {"맨투맨", "셔츠", "후드티"};
         String[] Bottoms12to16 = {"청바지", "면바지" , "슬랙스"};
 
         // 9~11도
-        String[] Outerwear9to11 = {"재킷", "점퍼", "코트"};
+        String[] Outerwear9to11 = {"재킷", "항공점퍼", "코트"};
         String[] Tops9to11 = {"맨투맨" , "기모 후드티", "니트"};
         String[] Bottoms9to11 = {"청바지", "면바지",  "기모 바지"};
 
         // 5~8도
-        String[] Outerwear5to8 = {"패딩" , "야상", "코트"};
+        String[] Outerwear5to8 = {"패딩" , "야상", "항공점퍼"};
         String[] Tops5to8 = {"맨투맨" , "기모 후드티", "니트"};
-        String[] Bottoms5to8 = { "청바지", "두꺼운 바지", "기모 바지"};
+        String[] Bottoms5to8 = { "청바지", "체육복", "기모 바지"};
 
         Random rand = new Random();
 
@@ -86,12 +86,145 @@ public class Fashion_Fragment extends Fragment {
             bottomname.setText(BottomItem);
 
         } else if(20 <= temp && temp <= 22){
+            randomIndex = rand.nextInt(Outerwear17to22.length);
+            OuterItem = Outerwear17to22[randomIndex];
+            outername.setText(OuterItem);
 
+            randomIndex = rand.nextInt(Tops17to22.length);
+            TopItem= Tops17to22[randomIndex];
+            topname.setText(TopItem);
+
+            randomIndex = rand.nextInt(Bottoms17to22.length);
+            BottomItem = Bottoms17to22[randomIndex];
+            bottomname.setText(BottomItem);
+        } else if (17 <= temp && temp <= 19) {
+            randomIndex = rand.nextInt(Outerwear12to16.length);
+            OuterItem = Outerwear12to16[randomIndex];
+            outername.setText(OuterItem);
+
+            randomIndex = rand.nextInt(Tops12to16.length);
+            TopItem = Tops12to16[randomIndex];
+            topname.setText(TopItem);
+
+            randomIndex = rand.nextInt(Bottoms12to16.length);
+            BottomItem = Bottoms12to16[randomIndex];
+            bottomname.setText(BottomItem);
+        } else if (12 <= temp && temp <= 16) {
+            randomIndex = rand.nextInt(Outerwear12to16.length);
+            OuterItem = Outerwear12to16[randomIndex];
+            outername.setText(OuterItem);
+
+            randomIndex = rand.nextInt(Tops12to16.length);
+            TopItem = Tops12to16[randomIndex];
+            topname.setText(TopItem);
+
+            randomIndex = rand.nextInt(Bottoms12to16.length);
+            BottomItem = Bottoms12to16[randomIndex];
+            bottomname.setText(BottomItem);
+
+        } else if (9 <= temp && temp <= 11) {
+            randomIndex = rand.nextInt(Outerwear9to11.length);
+            OuterItem = Outerwear9to11[randomIndex];
+            outername.setText(OuterItem);
+
+            randomIndex = rand.nextInt(Tops9to11.length);
+            TopItem = Tops9to11[randomIndex];
+            topname.setText(TopItem);
+
+            randomIndex = rand.nextInt(Bottoms9to11.length);
+            BottomItem = Bottoms9to11[randomIndex];
+            bottomname.setText(BottomItem);
+
+        } else if (5 <= temp && temp <= 8) {
+            randomIndex = rand.nextInt(Outerwear5to8.length);
+            OuterItem = Outerwear5to8[randomIndex];
+            outername.setText(OuterItem);
+
+            randomIndex = rand.nextInt(Tops5to8.length);
+            TopItem = Tops5to8[randomIndex];
+            topname.setText(TopItem);
+
+            randomIndex = rand.nextInt(Bottoms5to8.length);
+            BottomItem = Bottoms5to8[randomIndex];
+            bottomname.setText(BottomItem);
         }
+
         switch (OuterItem){
             case "바람막이":
-                outerimg.setBackgroundResource(R.drawable.);
+                outerimg.setBackgroundResource(R.drawable.windbreaker1);
+                break;
+            case "져지" :
+                outerimg.setBackgroundResource(R.drawable.jersey);
+                break;
+            case "가디건" :
+                outerimg.setBackgroundResource(R.drawable.cardigan);
+                break;
+            case "자켓" :
+                outerimg.setBackgroundResource(R.drawable.jacket);
+                break;
+            case "코트" :
+                outerimg.setBackgroundResource(R.drawable.coat);
+                break;
+            case "야상" :
+                outerimg.setBackgroundResource(R.drawable.yasang);
+                break;
+            case "패딩" :
+                outerimg.setBackgroundResource(R.drawable.padding);
+                break;
+            case "항공점퍼" :
+                outerimg.setBackgroundResource(R.drawable.hanggong);
+                break;
         }
+
+        switch (TopItem) {
+            case "반팔 티셔츠" :
+                topimg.setBackgroundResource(R.drawable.tshirt);
+                break;
+            case "셔츠" :
+                topimg.setBackgroundResource(R.drawable.shirt);
+                break;
+            case "긴팔 티셔츠" :
+                topimg.setBackgroundResource(R.drawable.longsleeve);
+                break;
+            case "맨투맨" :
+                topimg.setBackgroundResource(R.drawable.sweatshirt);
+                break;
+            case "후드티" :
+                topimg.setBackgroundResource(R.drawable.hoodie);
+                break;
+            case "니트" :
+                topimg.setBackgroundResource(R.drawable.knitted);
+                break;
+            case "기모 후드티" :
+                topimg.setBackgroundResource(R.drawable.gimohoodi);
+                break;
+        }
+
+        switch (BottomItem) {
+            case "반바지" :
+                bottomimg.setBackgroundResource(R.drawable.pairshorts);
+                break;
+            case "면바지" :
+                bottomimg.setBackgroundResource(R.drawable.cottonpants);
+                break;
+            case "치마" :
+                bottomimg.setBackgroundResource(R.drawable.skirt);
+                break;
+            case "슬랙스" :
+                bottomimg.setBackgroundResource(R.drawable.slacks);
+                break;
+            case "청바지" :
+                bottomimg.setBackgroundResource(R.drawable.jeans);
+                break;
+            case "기모 바지":
+                bottomimg.setBackgroundResource(R.drawable.gimo);
+                break;
+            case "체육복" :
+                bottomimg.setBackgroundResource(R.drawable.gymbazy);
+                break;
+        }
+
+
 
 
 
@@ -114,8 +247,7 @@ public class Fashion_Fragment extends Fragment {
 
             suggest(temp);
 
-            TextView textView = view.findViewById(R.id.textView);
-            textView.setText(String.valueOf(temp)); // 정수를 문자열로 변환하여 설정
+
         }
 
         return view;
