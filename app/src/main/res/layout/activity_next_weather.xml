@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/night_bg">
+    android:id="@+id/mainLayout"
+    android:background="@drawable/morning_bg">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -36,12 +37,12 @@
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/m_Temp"
+            android:id="@+id/m_temp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/m_area"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="15dp"
             android:gravity="center"
             android:text="30°"
             android:textColor="@color/white"
@@ -52,14 +53,17 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:background="@color/white"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:paddingTop="10dp">
+        android:background="#80FFFFFF"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="2dp"
+        android:layout_marginTop="0dp"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
             <TextView
                 android:id="@+id/day_1"
                 android:layout_width="wrap_content"
@@ -67,15 +71,15 @@
                 android:gravity="center"
                 android:text="Thursday"
                 android:textColor="@color/black"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                android:paddingTop="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:gravity="end"
                 android:layout_gravity="end"
-                android:orientation="horizontal"
-                android:background="@color/black">
+                android:orientation="horizontal">
                 <TextView
                     android:id="@+id/maxtemp_1"
                     android:layout_width="wrap_content"
@@ -83,7 +87,11 @@
                     android:layout_gravity="end"
                     android:gravity="end"
                     android:textSize="30sp"
-                    android:text="18°"/>
+                    android:text="18°"
+                    android:textColor="@color/red"
+                    android:paddingTop="10dp"
+                    android:layout_marginRight="10dp"
+                    />
 
                 <TextView
                     android:id="@+id/mintemp_1"
@@ -91,15 +99,18 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:gravity="end"
+                    android:paddingTop="10dp"
                     android:textSize="30sp"
-                    android:text="18°"/>
+                    android:text="18°"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/blue"/>
 
                 <ImageView
                     android:id="@+id/weather_1"
                     android:layout_width="67dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
-                    android:background="@drawable/blur_ic"
+                    android:background="@drawable/pink_cloudy"
                     android:gravity="end"
                     android:textSize="30sp"
                     />
@@ -123,15 +134,16 @@
                 android:gravity="center"
                 android:text="Thursday"
                 android:textColor="@color/black"
+                android:paddingTop="10dp"
                 android:textSize="25sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:gravity="end"
                 android:layout_gravity="end"
                 android:orientation="horizontal"
-                android:background="@color/black">
+                >
                 <TextView
                     android:id="@+id/maxtemp_2"
                     android:layout_width="wrap_content"
@@ -139,6 +151,9 @@
                     android:layout_gravity="end"
                     android:gravity="end"
                     android:textSize="30sp"
+                    android:textColor="@color/red"
+                    android:paddingTop="10dp"
+                    android:layout_marginRight="10dp"
                     android:text="18°"/>
 
                 <TextView
@@ -147,15 +162,19 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:gravity="end"
+                    android:paddingTop="10dp"
                     android:textSize="30sp"
-                    android:text="18°"/>
+                    android:text="18°"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/blue"
+                    />
 
                 <ImageView
                     android:id="@+id/weather_2"
                     android:layout_width="67dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
-                    android:background="@drawable/blur_ic"
+                    android:background="@drawable/pink_mooncloudy"
                     android:gravity="end"
                     android:textSize="30sp" />
             </LinearLayout>
@@ -178,15 +197,16 @@
                 android:gravity="center"
                 android:text="Thursday"
                 android:textColor="@color/black"
+                android:paddingTop="10dp"
                 android:textSize="25sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:gravity="end"
                 android:layout_gravity="end"
                 android:orientation="horizontal"
-                android:background="@color/black">
+               >
                 <TextView
                     android:id="@+id/maxtemp_3"
                     android:layout_width="wrap_content"
@@ -194,15 +214,21 @@
                     android:layout_gravity="end"
                     android:gravity="end"
                     android:textSize="30sp"
-                    android:text="18°"/>
+                    android:paddingTop="10dp"
+                    android:textColor="@color/red"
+                    android:text="18°"
+                    android:layout_marginRight="10dp"/>
 
                 <TextView
                     android:id="@+id/mintemp_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:paddingTop="10dp"
                     android:gravity="end"
+                    android:layout_marginRight="10dp"
                     android:textSize="30sp"
+                    android:textColor="@color/blue"
                     android:text="18°"/>
 
                 <ImageView
@@ -210,7 +236,7 @@
                     android:layout_width="67dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
-                    android:background="@drawable/blur_ic"
+                    android:background="@drawable/pink_sun"
                     android:gravity="end"
                     android:textSize="30sp" />
             </LinearLayout>
@@ -233,23 +259,27 @@
                 android:gravity="center"
                 android:text="Thursday"
                 android:textColor="@color/black"
+                android:paddingTop="10dp"
                 android:textSize="25sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:gravity="end"
+                android:layout_height="50dp"
                 android:layout_gravity="end"
-                android:orientation="horizontal"
-                android:background="@color/black">
+                android:gravity="end"
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/maxtemp_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:paddingTop="10dp"
                     android:gravity="end"
+                    android:text="18°"
+                    android:textColor="@color/red"
                     android:textSize="30sp"
-                    android:text="18°"/>
+                    android:layout_marginRight="10dp"/>
 
                 <TextView
                     android:id="@+id/mintemp_4"
@@ -257,15 +287,18 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:gravity="end"
+                    android:paddingTop="10dp"
+                    android:text="18°"
+                    android:textColor="@color/blue"
                     android:textSize="30sp"
-                    android:text="18°"/>
+                    android:layout_marginRight="10dp"/>
 
                 <ImageView
                     android:id="@+id/weather_4"
                     android:layout_width="67dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
-                    android:background="@drawable/blur_ic"
+                    android:background="@drawable/pink_rain"
                     android:gravity="end"
                     android:textSize="30sp" />
             </LinearLayout>
@@ -281,45 +314,50 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/day_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Thursday"
+                android:paddingTop="5dp"
                 android:textColor="@color/black"
                 android:textSize="25sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:gravity="end"
                 android:layout_gravity="end"
-                android:orientation="horizontal"
-                android:background="@color/black">
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/maxtemp_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:layout_marginRight="10dp"
                     android:gravity="end"
-                    android:textSize="30sp"
-                    android:text="18°"/>
+                    android:paddingTop="5dp"
+                    android:textColor="@color/red"
+                    android:textSize="30sp" />
+
                 <TextView
                     android:id="@+id/mintemp_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:layout_marginRight="10dp"
                     android:gravity="end"
-                    android:textSize="30sp"
-                    android:text="18°"/>
+                    android:paddingTop="5dp"
+                    android:textColor="@color/blue"
+                    android:textSize="30sp" />
 
                 <ImageView
                     android:id="@+id/weather_5"
                     android:layout_width="67dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
-                    android:background="@drawable/blur_ic"
                     android:gravity="end"
                     android:textSize="30sp" />
             </LinearLayout>

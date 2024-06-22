@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +22,7 @@ import java.util.Date;
 import java.util.Locale;
 import static android.content.ContentValues.TAG;
 public class NextWeatherActivity extends AppCompatActivity {
-
+    static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,17 @@ public class NextWeatherActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String jsonArrayString = intent.getStringExtra("jsonArray");
+        String text = intent.getStringExtra("text");
+
+        int int_hour = intent.getIntExtra("hour", -1);
+        layoutSet_Background(int_hour);
+
+
+        // 텍스트를 설정할 TextView
+        TextView textView = findViewById(R.id.m_temp);
+        if (text != null) {
+            textView.setText(text);
+        }
 
         if (jsonArrayString != null) {
             try {
@@ -40,6 +52,24 @@ public class NextWeatherActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void layoutSet_Background(int int_hour){
+
+        LinearLayout mainLayout = findViewById(R.id.mainLayout);
+
+        Log.d(TAG, "nextweather : " + int_hour);
+
+        if(21 <= int_hour || int_hour <= 05){ //21시~ 05시
+            mainLayout.setBackgroundResource(R.drawable.night_bg);
+        }else if(int_hour >= 06 && int_hour <= 9){ //06시 ~ 9시
+            mainLayout.setBackgroundResource(R.drawable.nightcloud_bg);
+        }else if(int_hour >= 10 && int_hour < 17){ //10시 ~ 16시
+            mainLayout.setBackgroundResource(R.drawable.morning_bg);
+        }else{ //17시~21시
+            mainLayout.setBackgroundResource(R.drawable.afternoon_bg);
+        }
+    }
+
     int j = 0;
     String[] array = new String[8];
     public void setWeatherIcon(int i, String des){
@@ -74,11 +104,11 @@ public class NextWeatherActivity extends AppCompatActivity {
             }
 
             if (rainCount > 0) {
-                weather_v.setBackgroundResource(R.drawable.rain_ic);
+                weather_v.setBackgroundResource(R.drawable.pink_rain);
             } else if (overcastCount > cloudyCount) {
-                weather_v.setBackgroundResource(R.drawable.sun_ic);
+                weather_v.setBackgroundResource(R.drawable.pink_sun);
             } else {
-                weather_v.setBackgroundResource(R.drawable.blur_ic);
+                weather_v.setBackgroundResource(R.drawable.pink_cloudy);
             }
 
             Arrays.fill(array, null);
@@ -94,17 +124,21 @@ public class NextWeatherActivity extends AppCompatActivity {
         calendar.add(Calendar.DATE, i);
 
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int month = calendar.get(Calendar.MONTH) + 1; // Calendar.MONTH is zero-based, so add 1
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        String[] days = {"일", "월", "화", "수", "목", "금", "토"};
+        String[] days = {"일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"};
 
         String day_Id = "day_" + i;
 
-        int day_resId = getResources().getIdentifier(day_Id ,"id", getPackageName());
+        int day_resId = getResources().getIdentifier(day_Id, "id", getPackageName());
 
         TextView day = findViewById(day_resId);
 
-        day.setText(days[dayOfWeek-1]);
+        String formattedDate = String.format("%d/%d %s", month, dayOfMonth, days[dayOfWeek - 1]);
+        day.setText(formattedDate);
     }
+
 
     public void setTemperatureValues(double maxTemp, double minTemp, int i) {
         setDate(i);
@@ -140,11 +174,11 @@ public class NextWeatherActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
 
-        // 현재 날짜에 하루를 더함
+        // Add specified number of days to the current date
         calendar.add(Calendar.DATE, i);
-
-        SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        return DateFormat.format(calendar.getTime()); // 현재 시간 생성
+        String Date2 = mFormat.format(calendar.getTime());
+        Log.d(TAG, "DATEFORMAT : " + Date2);
+        return Date2; // Return the formatted date string
     }
 
     private static class WeatherUtils {
@@ -156,14 +190,15 @@ public class NextWeatherActivity extends AppCompatActivity {
         }
 
         public void getJsonItem(JSONArray list) throws JSONException, ParseException {
-            SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
+
             double maxTemp = Double.MIN_VALUE;
             double minTemp = Double.MAX_VALUE;
             int day_Count = 0;
-            int getTime_count = 0;
+            int getTime_count = 1;
             int xml_count = 1;
+            Log.d(TAG, "run");
 
-            for (int i = 2; i < list.length(); i++) {
+            for (int i = 2; i < list.length(); i++) { //2번째부터 시작
 
                 JSONObject item = list.getJSONObject(i);
                 String dt_txt = item.getString("dt_txt");
@@ -174,10 +209,15 @@ public class NextWeatherActivity extends AppCompatActivity {
                 JSONObject weather = weatherArray.getJSONObject(0);
                 String description = weather.getString("description");
 
+                Log.d(TAG, "list : " + list.length());
+                Log.d(TAG, "formattedDate" + formattedDate);
                 if (formattedDate.equals(NextWeatherActivity.getTime(getTime_count))) {
                     day_Count += 1; // 7번이 되면 초기화 날짜가 바뀜
                     double temp = main.getDouble("temp");
                     ((NextWeatherActivity) context).setWeatherIcon(xml_count, description);
+
+                    Log.d(TAG, "maxTemp" + maxTemp + "minTemp : " + minTemp);
+
                     if (temp > maxTemp) {
                         maxTemp = temp;
                     }
@@ -185,7 +225,8 @@ public class NextWeatherActivity extends AppCompatActivity {
                         minTemp = temp;
                     }
 
-                    if (day_Count == 7) {
+                    Log.d(TAG, "day_count : " + day_Count);
+                    if (day_Count == 7 || list.length()-1 == i) {
 
                         getTime_count++; // 다음날 데이터받게함
                         ((NextWeatherActivity) context).setTemperatureValues(maxTemp, minTemp, xml_count);
@@ -194,11 +235,14 @@ public class NextWeatherActivity extends AppCompatActivity {
                         minTemp = Double.MAX_VALUE;
                         xml_count++;
 
+                        Log.d(TAG, "Temperature : " + maxTemp + minTemp + xml_count);
+
                         day_Count = 0; // 리셋
                     }
-                }
 
-                Log.d(TAG, "Formatted date: " + formattedDate);
+
+                    Log.d(TAG, "Formatted date: " + formattedDate);
+                }
             }
         }
     }

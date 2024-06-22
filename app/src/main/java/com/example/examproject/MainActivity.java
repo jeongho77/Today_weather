@@ -1,8 +1,13 @@
 package com.example.examproject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
     String period = "AM";
     JSONArray list = null;
     Button next_btn;
+    int int_hour, frag_temp, hour1;
+    public LinearLayout mainLayout;
+
+    String temp;
 
 
     private Runnable updateTimeRunnable = new Runnable() {
@@ -71,11 +80,49 @@ public class MainActivity extends AppCompatActivity {
         new ApiExplorerTask().execute();
 
         next_btn = findViewById(R.id.next_btn);
+        Button fashion_btn = findViewById(R.id.fashion_btn);
+        fashion_btn.setOnClickListener(new View.OnClickListener() {
+
+            int trigger = 0;
+            @Override
+            public void onClick(View v) {
+                switch (trigger) {
+                    case 0:
+                        findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
+
+
+                        Fashion_Fragment myFragment = Fashion_Fragment.newInstance(frag_temp);
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, myFragment);
+                        fragmentTransaction.commit();
+
+                        trigger = 1;
+                        break;
+                    case 1:
+                        findViewById(R.id.fragment_container).setVisibility(View.GONE);
+                        trigger = 0;
+                        break;
+                    default:
+                        // 기본 동작 (필요에 따라 추가)
+                        break;
+                }
+            }
+        });
+
         next_btn.setOnClickListener(new View.OnClickListener() {
+            ImageView imageView = findViewById(R.id.mainIcon);
+            TextView textView = findViewById(R.id.Main_temp);
+            LinearLayout mainLayout = findViewById(R.id.mainLayout);
+
+            String text = textView.getText().toString();
+
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), NextWeatherActivity.class);
                 intent.putExtra("jsonArray", list.toString());
+                intent.putExtra("hour", hour1);
+                intent.putExtra("text", text);
                 startActivity(intent);
             }
         });
@@ -102,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         String day = subDay.substring(0,1);
 
         int colonIndex = tDate.indexOf(':');
-        int int_hour = Integer.parseInt(tDate.substring(0, colonIndex)); // 시간 (HH)
+        int_hour = Integer.parseInt(tDate.substring(0, colonIndex)); // 시간 (HH)
         int int_minute = Integer.parseInt(tDate.substring(colonIndex + 1)); // 분 (MM)
 
         colonIndex = dDate.indexOf('-');
@@ -112,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
         TextView Tv_time = findViewById(R.id.time);
         TextView Tv_date = findViewById(R.id.date);
 
-        LinearLayout mainLayout = findViewById(R.id.mainLayout);
+        mainLayout = findViewById(R.id.mainLayout);
 
         if(21 <= int_hour || int_hour <= 05){ //21시~ 05시
             mainLayout.setBackgroundResource(R.drawable.night_bg);
@@ -123,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
         }else{ //17시~21시
             mainLayout.setBackgroundResource(R.drawable.afternoon_bg);
         }
+
+        hour1 = int_hour;
 
         if(int_hour >= 12){ //12시를 넘으면 PM , 12:50분가능
             period = "PM";
@@ -139,19 +188,6 @@ public class MainActivity extends AppCompatActivity {
 
         return date;
     }
-
-//    사용안합니다!
-//    private String getCurrentTime() {
-//        Calendar calendar = Calendar.getInstance();
-//        TimeZone timeZone = TimeZone.getDefault();
-//        calendar.setTimeZone(timeZone);
-//
-//        dateFormat.setTimeZone(timeZone);
-//
-//        return dateFormat.format(calendar.getTime());
-//    }
-
-
 
     @Override
     protected void onDestroy() {
@@ -260,13 +296,15 @@ public class MainActivity extends AppCompatActivity {
 
                 String double_temp = main.getString("temp"); // 기온
                 int dotIndex = double_temp.indexOf('.');
-                String temp;
+
                 if (dotIndex != -1) {
                     // 점이 문자열에 있는 경우
                     temp = double_temp.substring(0, dotIndex) + "℃";
+                    frag_temp = Integer.parseInt(double_temp.substring(0, dotIndex));
                 } else {
                     // 점이 문자열에 없는 경우, 전체 문자열을 사용
                     temp = double_temp + "℃";
+                    frag_temp = Integer.parseInt(double_temp);
                 }
 
                 String humidity = main.getString("humidity"); //습도
@@ -417,11 +455,9 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("TextViewSetup", "TextView를 찾을 수 없음: " + Time_resId);
                     }
                 }
-////              Log.d(TAG, "weather dxTxt = " + dtTxt);
-//                Log.d(TAG, "weather temp = " + temp);
-//                Log.d(TAG, "weather humidity = " + humidity);
+
                 Log.d(TAG, "weather description = " + description);
-//                Log.d(TAG, "weather pop = " + pop);
+
             }
         }
 
