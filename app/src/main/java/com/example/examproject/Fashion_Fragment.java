@@ -236,10 +236,7 @@ public class Fashion_Fragment extends Fragment {
             int temp = getArguments().getInt(ARG_TEMP);
 
             suggest(temp);
-
-
         }
-
         return view;
     }
 

@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
 
-            getTime();
+            getTime(MainActivity.this);
             handler.postDelayed(this, 10000); // 10초마다 현재 시간 갱신
         }
     };
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 //        timeTextView.setText(currentTime);
 
         // API 호출을 비동기 작업으로 실행
-        Log.d(TAG, "Time: " + getTime());
+        Log.d(TAG, "Time: " + getTime(this));
         new ApiExplorerTask().execute();
 
         next_btn = findViewById(R.id.next_btn);
@@ -108,14 +110,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         next_btn.setOnClickListener(new View.OnClickListener() {
-            ImageView imageView = findViewById(R.id.mainIcon);
-            TextView textView = findViewById(R.id.Main_temp);
-            LinearLayout mainLayout = findViewById(R.id.mainLayout);
 
-            String text = textView.getText().toString();
+
 
             @Override
             public void onClick(View view) {
+                ImageView imageView = findViewById(R.id.mainIcon);
+
+                LinearLayout mainLayout = findViewById(R.id.mainLayout);
+                TextView textView = findViewById(R.id.Main_temp);
+                String text = textView.getText().toString();
+
                 Intent intent = new Intent(getApplicationContext(), NextWeatherActivity.class);
                 intent.putExtra("jsonArray", list.toString());
                 intent.putExtra("hour", hour1);
@@ -127,8 +132,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public String getTime(){
+    public String getTime(Context context){
         //날짜 가져오는 함수
+        //Main 에서 필요한 이유
 
         mNow = System.currentTimeMillis();
         Date mDate = new Date(mNow);
@@ -153,10 +159,9 @@ public class MainActivity extends AppCompatActivity {
         int int_day = Integer.parseInt(dDate.substring(0, colonIndex));
         int int_month = Integer.parseInt(dDate.substring(colonIndex + 1));
 
-        TextView Tv_time = findViewById(R.id.time);
-        TextView Tv_date = findViewById(R.id.date);
-
-        mainLayout = findViewById(R.id.mainLayout);
+        TextView Tv_time = ((Activity) context).findViewById(R.id.time);
+        TextView Tv_date = ((Activity) context).findViewById(R.id.date);
+        View mainLayout = ((Activity) context).findViewById(R.id.mainLayout);
 
         if(21 <= int_hour || int_hour <= 05){ //21시~ 05시
             mainLayout.setBackgroundResource(R.drawable.night_bg);

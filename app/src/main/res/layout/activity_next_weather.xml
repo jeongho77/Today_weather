@@ -9,49 +9,87 @@
     android:id="@+id/mainLayout"
     android:background="@drawable/morning_bg">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="425dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/m_Weather"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="25dp"
-            android:gravity="center"
-            android:text="Sunny"
-            android:textColor="@color/white"
-            android:textSize="60sp" />
-
-        <TextView
-            android:id="@+id/m_area"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="92dp"
-            android:gravity="center"
-            android:text="울산"
-            android:textColor="@color/white"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/m_temp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/m_area"
-            android:layout_gravity="center"
-            android:layout_marginLeft="15dp"
-            android:gravity="center"
-            android:text="30°"
-            android:textColor="@color/white"
-            android:textSize="70sp" />
-    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="5/10 (수)"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/mainIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/cloud1"></ImageView>
+
+        <TextView
+            android:id="@+id/Main_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="82dp"
+            android:layout_gravity="center"
+            android:shadowColor="@color/black"
+            android:shadowDx="4"
+            android:shadowDy="1"
+            android:shadowRadius="6"
+            android:text="22℃"
+            android:textColor="@color/white"
+            android:textSize="70dp" />
+
+        <!-- 일반 텍스트 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:shadowColor="@color/black"
+                android:shadowDx="4"
+                android:shadowDy="1"
+                android:shadowRadius="6"
+                android:text="울산"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:shadowColor="@color/black"
+                android:shadowDx="4"
+                android:shadowDy="1"
+                android:shadowRadius="6"
+                android:text="|  PM 10 : 40"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
         android:orientation="vertical"
         android:background="#80FFFFFF"
         android:paddingLeft="20dp"
@@ -314,7 +352,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/day_5"

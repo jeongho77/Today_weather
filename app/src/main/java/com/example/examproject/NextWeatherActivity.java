@@ -21,10 +21,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import static android.content.ContentValues.TAG;
-public class NextWeatherActivity extends AppCompatActivity {
+public class NextWeatherActivity extends AppCompatActivity{
     static SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next_weather);
 
@@ -37,7 +39,7 @@ public class NextWeatherActivity extends AppCompatActivity {
 
 
         // 텍스트를 설정할 TextView
-        TextView textView = findViewById(R.id.m_temp);
+        TextView textView = findViewById(R.id.Main_temp);
         if (text != null) {
             textView.setText(text);
         }
@@ -51,6 +53,10 @@ public class NextWeatherActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        MainActivity mainActivity = new MainActivity();
+        mainActivity.getTime(NextWeatherActivity.this);
+
     }
 
     public void layoutSet_Background(int int_hour){
