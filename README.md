@@ -7,7 +7,7 @@
 ## 팀원 구성
 |서정호|이상협
 |---|---
-|필수 기능 구현|필수 기능 구현, 디자인
+|백엔드|프론트엔드, 디자인
 |[jeongho77](https://github.com/jeongho77)|[sionhyeop](https://github.com/sionhyeop)|
 <br>
 
