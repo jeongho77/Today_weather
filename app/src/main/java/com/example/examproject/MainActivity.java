@@ -1,5 +1,9 @@
 package com.example.examproject;
-
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -54,8 +59,10 @@ public class MainActivity extends AppCompatActivity {
     Button next_btn;
     int int_hour, frag_temp, hour1;
     public LinearLayout mainLayout;
+    String selectedLocation;
 
     String temp;
+    int currentDrawableId;
 
 
     private Runnable updateTimeRunnable = new Runnable() {
@@ -73,18 +80,15 @@ public class MainActivity extends AppCompatActivity {
 
         handler.post(updateTimeRunnable); // Runnable 실행
 
-//        // TextView에 현재 시간 표시
-//        TextView timeTextView = findViewById(R.id.timeTextView);
-//        timeTextView.setText(currentTime);
-
         // API 호출을 비동기 작업으로 실행
         Log.d(TAG, "Time: " + getTime(this));
-        new ApiExplorerTask().execute();
+        new ApiExplorerTask(null,null).execute();
 
+
+        //오늘의 옷 추천받기 버튼
         next_btn = findViewById(R.id.next_btn);
         Button fashion_btn = findViewById(R.id.fashion_btn);
         fashion_btn.setOnClickListener(new View.OnClickListener() {
-
             int trigger = 0;
             @Override
             public void onClick(View v) {
@@ -109,28 +113,75 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        //위치 바꾸기 버튼
+        Button changeBtn = findViewById(R.id.change_btn);
+        changeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLocationDialog();
+            }
+        });
+
+        //다음날 날씨보기 버튼
         next_btn.setOnClickListener(new View.OnClickListener() {
-
-
-
             @Override
             public void onClick(View view) {
-                ImageView imageView = findViewById(R.id.mainIcon);
+                ImageView mainIcon = findViewById(R.id.mainIcon);
 
                 LinearLayout mainLayout = findViewById(R.id.mainLayout);
                 TextView textView = findViewById(R.id.Main_temp);
                 String text = textView.getText().toString();
 
                 Intent intent = new Intent(getApplicationContext(), NextWeatherActivity.class);
+                intent.putExtra("drawableId", currentDrawableId);
                 intent.putExtra("jsonArray", list.toString());
                 intent.putExtra("hour", hour1);
                 intent.putExtra("text", text);
+                intent.putExtra("area", selectedLocation);
                 startActivity(intent);
             }
         });
     }
 
 
+    private void showLocationDialog() {
+        // 선택 항목 배열
+        final String[] locations = {"중구", "남구", "동구", "북구", "울주군"};
+        final String[][] coordinates = {
+                {"35.5681", "129.3327"}, // 중구
+                {"35.5438", "129.3317"}, // 남구
+                {"35.5065", "129.4176"}, // 동구
+                {"35.5823", "129.3610"}, // 북구
+                {"35.5272", "129.2421"}  // 울주군
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("지역 선택");
+        builder.setItems(locations, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 각 항목 클릭 시 동작 정의
+                selectedLocation = locations[which];
+                String latitude = coordinates[which][0];
+                String longitude = coordinates[which][1];
+
+                setAreaText(selectedLocation, MainActivity.this);
+
+                new ApiExplorerTask(latitude,longitude).execute();
+                // 선택한 지역에 대한 동작 추가
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void setAreaText(String area, Context context){
+       TextView textArea = ((Activity) context).findViewById(R.id.area);
+
+       if(area != null) {
+           textArea.setText("울산 " + area);
+       }
+    }
 
     public String getTime(Context context){
         //날짜 가져오는 함수
@@ -201,11 +252,18 @@ public class MainActivity extends AppCompatActivity {
     // AsyncTask 클래스
     private class ApiExplorerTask extends AsyncTask<Void, Void, String> {
 
+        String lat, lon = null;
+
+        public ApiExplorerTask(String lat, String lon) {
+            this.lat = lat;
+            this.lon = lon;
+        }
+
         @Override
         protected String doInBackground(Void... voids) {
             StringBuilder result = null; //HTTP 응답 데이터 받을공간
             try {
-                result = new StringBuilder(fetchData_Api());
+                result = new StringBuilder(fetchData_Api(lat, lon));
             } catch (Exception e) {
                 Log.e(TAG, "Error: ", e);
             }
@@ -223,14 +281,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        protected String fetchData_Api() {
+        protected String fetchData_Api(String lat, String lon) {
             StringBuilder result = new StringBuilder();
             HttpURLConnection conn = null;
             BufferedReader rd = null;
+            //35.5936 129.352
             try {
                 StringBuilder urlBuilder = new StringBuilder("https://api.openweathermap.org/data/2.5/forecast");
-                urlBuilder.append("?" + URLEncoder.encode("lat", "UTF-8") + "=35.5936");
-                urlBuilder.append("&" + URLEncoder.encode("lon", "UTF-8") + "=" + URLEncoder.encode("129.352", "UTF-8"));
+                if(lat == null || lon == null) {
+                    urlBuilder.append("?" + URLEncoder.encode("lat", "UTF-8") + "=" + URLEncoder.encode("35.5936", "UTF-8"));
+                    urlBuilder.append("&" + URLEncoder.encode("lon", "UTF-8") + "=" + URLEncoder.encode("129.352", "UTF-8"));
+                }else{
+                    urlBuilder.append("?" + URLEncoder.encode("lat", "UTF-8") + "=" + URLEncoder.encode(lat, "UTF-8"));
+                    urlBuilder.append("&" + URLEncoder.encode("lon", "UTF-8") + "=" + URLEncoder.encode(lon, "UTF-8"));
+                }
                 urlBuilder.append("&" + URLEncoder.encode("appid", "UTF-8") + "=" + URLEncoder.encode("7a87c8b563a09149247b0f3204175970", "UTF-8"));
                 urlBuilder.append("&" + URLEncoder.encode("lang", "UTF-8") + "=" + URLEncoder.encode("kr", "UTF-8"));
                 urlBuilder.append("&" + URLEncoder.encode("units", "UTF-8") + "=" + URLEncoder.encode("metric", "UTF-8"));
@@ -330,8 +394,6 @@ public class MainActivity extends AppCompatActivity {
                     ImageView mainIcon = findViewById(R.id.mainIcon);
                     if(i == 2){
                         Main_temp.setText(temp);
-
-
                     }
                     // 동적으로 ID 생성
                     String TimeV_Id = "mwTime_" + i;
@@ -362,17 +424,20 @@ public class MainActivity extends AppCompatActivity {
 
                                     if(i == 2){
                                         mainIcon.setBackgroundResource(R.drawable.msun_ic);
+                                        currentDrawableId = R.drawable.msun_ic;
                                     }
                                     if(int_hour == 00 || int_hour == 03) {
                                         mwIcon.setBackgroundResource(R.drawable.union_ic);
                                         if (i == 2) {
                                             mainIcon.setBackgroundResource(R.drawable.union_ic);
+                                            currentDrawableId = R.drawable.union_ic;
                                         }
                                     }
                                 }else{
                                     mwIcon.setBackgroundResource(R.drawable.union_ic);
                                     if(i == 2){
                                         mainIcon.setBackgroundResource(R.drawable.union_ic);
+                                        currentDrawableId = R.drawable.union_ic;
                                     }
                                 }
 
@@ -383,17 +448,20 @@ public class MainActivity extends AppCompatActivity {
 
                                     if(i == 2){
                                         mainIcon.setBackgroundResource(R.drawable.msuncloud_ic);
+                                        currentDrawableId = R.drawable.msuncloud_ic;
                                     }
                                     if(int_hour == 00 || int_hour == 03) {
                                         mwIcon.setBackgroundResource(R.drawable.nightcloud_ic);
                                         if (i == 2) {
                                             mainIcon.setBackgroundResource(R.drawable.mnightcloud_ic);
+                                            currentDrawableId = R.drawable.mnightcloud_ic;
                                         }
                                     }
                                 }else{
                                     mwIcon.setBackgroundResource(R.drawable.nightcloud_ic);
                                     if(i == 2){
                                         mainIcon.setBackgroundResource(R.drawable.mnightcloud_ic);
+                                        currentDrawableId = R.drawable.mnightcloud_ic;
                                     }
                                 }
                                 break;
@@ -402,17 +470,20 @@ public class MainActivity extends AppCompatActivity {
                                     mwIcon.setBackgroundResource(R.drawable.suncloud_ic);
                                     if(i == 2){
                                         mainIcon.setBackgroundResource(R.drawable.msuncloud_ic);
+                                        currentDrawableId = R.drawable.msuncloud_ic;
                                     }
                                     if(int_hour == 00 || int_hour == 03) {
                                         mwIcon.setBackgroundResource(R.drawable.nightcloud_ic);
                                         if (i == 2) {
                                             mainIcon.setBackgroundResource(R.drawable.mnightcloud_ic);
+                                            currentDrawableId = R.drawable.mnightcloud_ic;
                                         }
                                     }
                                 }else{
                                     mwIcon.setBackgroundResource(R.drawable.nightcloud_ic);
                                     if(i == 2){
                                         mainIcon.setBackgroundResource(R.drawable.mnightcloud_ic);
+                                        currentDrawableId = R.drawable.mnightcloud_ic;
                                     }
                                 }
                                 break;
@@ -420,6 +491,7 @@ public class MainActivity extends AppCompatActivity {
                                 mwIcon.setBackgroundResource(R.drawable.blur_ic);
                                 if(i == 2){
                                     mainIcon.setBackgroundResource(R.drawable.mblur_ic);
+                                    currentDrawableId = R.drawable.mblur_ic;
                                 }
                                 break;
                             case "약간의 구름이 낀 하늘" :
@@ -428,17 +500,21 @@ public class MainActivity extends AppCompatActivity {
 
                                     if(i == 2){
                                         mainIcon.setBackgroundResource(R.drawable.msun_ic);
+                                        currentDrawableId = R.drawable.msun_ic;
                                     }
                                     if(int_hour == 00 || int_hour == 03) {
                                         mwIcon.setBackgroundResource(R.drawable.union_ic);
                                         if (i == 2) {
                                             mainIcon.setBackgroundResource(R.drawable.union_ic);
+                                            currentDrawableId = R.drawable.union_ic;
+
                                         }
                                     }
                                 }else{
                                     mwIcon.setBackgroundResource(R.drawable.union_ic);
                                     if(i == 2){
                                         mainIcon.setBackgroundResource(R.drawable.union_ic);
+                                        currentDrawableId = R.drawable.union_ic;
                                     }
                                 }
                                 break;
@@ -446,6 +522,7 @@ public class MainActivity extends AppCompatActivity {
                                 mwIcon.setBackgroundResource(R.drawable.rain_ic);
                                 if(i == 2){
                                     mainIcon.setBackgroundResource(R.drawable.mrain_ic);
+                                    currentDrawableId = R.drawable.mrain_ic;
                                 }
                                 break;
                         }

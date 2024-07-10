@@ -34,12 +34,12 @@ public class Fashion_Fragment extends Fragment {
     public void suggest(int temp){
 
         // 23도 이상
-        String[] Outerwear23 = {"바람막이", "져지"};
+        String[] Outerwear23 = {"바람막이", "져지", "" , ""};
         String[] Tops23 = {"반팔 티셔츠", "셔츠"};
         String[] Bottoms23 = {"반바지", "면바지", "치마"};
 
         // 17~22도
-        String[] Outerwear17to22 = {"가디건" , "져지" , "바람막이"};
+        String[] Outerwear17to22 = {"가디건" , "져지" , "바람막이", ""};
         String[] Tops17to22 = {"긴팔 티셔츠", "셔츠", "반팔 티셔츠"};
         String[] Bottoms17to22 = {"반바지", "면바지", "슬랙스"};
 
@@ -173,6 +173,8 @@ public class Fashion_Fragment extends Fragment {
                 break;
             case "항공점퍼" :
                 outerimg.setBackgroundResource(R.drawable.hanggong);
+                break;
+            case "" :
                 break;
         }
 

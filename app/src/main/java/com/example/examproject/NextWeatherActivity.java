@@ -2,6 +2,8 @@ package com.example.examproject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
@@ -33,6 +35,13 @@ public class NextWeatherActivity extends AppCompatActivity{
         Intent intent = getIntent();
         String jsonArrayString = intent.getStringExtra("jsonArray");
         String text = intent.getStringExtra("text");
+        String selectedLocation = intent.getStringExtra("area");
+
+        ImageView mainIcon = findViewById(R.id.mainIcon);
+        int drawableId = getIntent().getIntExtra("drawableId", -1);
+        if (drawableId != -1) {
+            mainIcon.setBackgroundResource(drawableId);
+        }
 
         int int_hour = intent.getIntExtra("hour", -1);
         layoutSet_Background(int_hour);
@@ -56,6 +65,7 @@ public class NextWeatherActivity extends AppCompatActivity{
 
         MainActivity mainActivity = new MainActivity();
         mainActivity.getTime(NextWeatherActivity.this);
+        mainActivity.setAreaText(selectedLocation, NextWeatherActivity.this);
 
     }
 
