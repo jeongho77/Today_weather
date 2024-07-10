@@ -64,7 +64,7 @@
                 android:shadowDx="4"
                 android:shadowDy="1"
                 android:shadowRadius="6"
-                android:text="울산"
+                android:text="울산 중구"
                 android:textColor="@color/white"
                 android:textSize="18dp" />
 
