@@ -22,7 +22,7 @@
 ## 프로젝트 시연 영상
 
 
-## 프로젝트 홍보용 사진
+## 프로젝트 기능 설명
 <div style="display:flex; flex-direction:row;">
     
 </div>
